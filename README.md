@@ -1,2 +1,2 @@
-# GiseSimilasyonu
+# GişeSimilasyonu
  Python 
