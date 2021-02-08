@@ -1,0 +1,166 @@
+
+
+
+    int ilk_gelen,musteri_say=1,sonraki_gelen,gise_sure,zaman,i;
+    int max_bekleme_sure=0,cekirdek,toplam_sure,finito=0,uzunluk,max_uzunluk=0,toplam_bekleme=0;
+    struct musteri bir_musteri,any_musteri;
+  
+
+    printf("Sayi uretici icin cekirdegi giriniz..\n");
+    scanf("%d",&cekirdek);
+    srand(cekirdek);
+    printf("Toplam simulasyon suresini giriniz..\n\n");
+    scanf("%d",&toplam_sure);
+    printf("Musteriler geliyor..\n\n");
+
+    for(i=0;i<3;i++)
+    {
+        giseler[i].bos_mu=-1;
+        giseler[i].top_musteri=0;
+        giseler[i].top_sure=0;
+    }
+
+    ilk_gelen=rand()%6;
+    zaman=ilk_gelen;
+
+    do
+    {
+        bir_musteri.gelis=ilk_gelen;
+        bir_musteri.no=musteri_say;
+        musteri_say++;
+        bir_musteri.bekleme_suresi=0;
+        dairesel_ekle(kuyruk,&on,&arka,bir_musteri);
+        sonraki_gelen=zaman+rand()%6;
+        printf("%d.dakikada Musteri#%d bankaya geldi.\n",zaman,musteri_say-1);
+    }
+    while(sonraki_gelen==ilk_gelen);
+
+    for(i=0;i<3;i++)
+    {
+        if(bos_mu(on)==0)
+        {
+            gise_sure=rand()%8+3;
+            any_musteri=dairesel_sil(kuyruk,&on,&arka);
+            giseler[i].hizmet_sure=gise_sure;
+            giseler[i].g_musteri=any_musteri;
+            giseler[i].bos_mu=1;
+            giseler[i].top_musteri++;
+            giseler[i].top_sure+=gise_sure;
+            toplam_bekleme+=any_musteri.bekleme_suresi;
+            printf("%d.dakikada Musteri#%d Gise#%d'de hizmet almaya baslamistir.\n",zaman,any_musteri.no,i+1);
+        }
+    }
+
+    for(zaman++;zaman<toplam_sure;zaman++)
+    {
+        while(sonraki_gelen==zaman)
+        {
+            bir_musteri.no=musteri_say;
+            musteri_say++;
+            bir_musteri.gelis=sonraki_gelen;
+            bir_musteri.bekleme_suresi=0;
+            dairesel_ekle(kuyruk,&on,&arka,bir_musteri);
+            sonraki_gelen=zaman+rand()%6;
+            printf("%d.dakikada Musteri#%d bankaya geldi.\n",zaman,musteri_say-1);
+        }
+        for(i=0;i<3;i++)
+        {
+            if(giseler[i].bos_mu==1)
+            {
+                giseler[i].hizmet_sure--;
+            }
+            if(giseler[i].bos_mu==1 && giseler[i].hizmet_sure==0)
+            {
+                giseler[i].bos_mu=-1;
+                printf("%d.dakikada Musteri#%d Gise#%d'yi terk etti.\n",zaman,giseler[i].g_musteri.no,i+1);
+            }
+        }
+        for(i=0;i<3;i++)
+        {
+            if(bos_mu(on)==0 && giseler[i].bos_mu==-1)
+            {
+                bir_musteri=dairesel_sil(kuyruk,&on,&arka);
+                gise_sure=rand()%8+3;
+                bir_musteri.bekleme_suresi=zaman-bir_musteri.gelis;
+                if(bir_musteri.bekleme_suresi>max_bekleme_sure)
+                    max_bekleme_sure=bir_musteri.bekleme_suresi;
+                giseler[i].hizmet_sure=gise_sure;
+                giseler[i].g_musteri=bir_musteri;
+                giseler[i].bos_mu=1;
+                giseler[i].top_musteri++;
+                giseler[i].top_sure+=giseler[i].hizmet_sure;
+                toplam_bekleme+=bir_musteri.bekleme_suresi;
+                printf("%d.dakikada Musteri#%d Gise#%d'de hizmet almaya baslamistir.\n",zaman,bir_musteri.no,i+1);
+            }
+        }
+        uzunluk=(arka-on+2+MAX)%MAX;
+        if(uzunluk>max_uzunluk){
+            max_uzunluk=uzunluk;
+        }
+    }
+
+    while(finito==0)
+    {
+        /*Simulasyon s?resi sona erdi?inde ayn? dakika i?erisinde ?nce
+        e?er varsa gi?elerde olan m??terilerin hizmet s?releri birer dakika azalt?l?r.
+        Daha sonra e?er varsa gi?elerde hizmeti biten m??teriler g?nderilir.
+        E?er varsa kuyrukta bekleyen m??teriler e?er bo?alm??sa
+        bo?alan gi?elere g?nderilir.
+        Hem kuyruk hem de gi?eler bo?sa d?ng?den ??k?l?r.*/
+
+        for(i=0;i<3;i++)
+        {
+            if(giseler[i].bos_mu==1)
+            {
+                giseler[i].hizmet_sure--;
+            }
+            if(giseler[i].bos_mu==1 && giseler[i].hizmet_sure==0)
+            {
+                giseler[i].bos_mu=-1;
+                printf("%d.dakikada Musteri#%d Gise#%d'yi terk etti.\n",zaman,giseler[i].g_musteri.no,i+1);
+            }
+        }
+
+        for(i=0;i<3;i++)
+        {
+            if(giseler[i].bos_mu==-1 && bos_mu(on)==0)
+            {
+                bir_musteri=dairesel_sil(kuyruk,&on,&arka);
+                gise_sure=rand()%8+3;
+                bir_musteri.bekleme_suresi=zaman-bir_musteri.gelis;
+                if(bir_musteri.bekleme_suresi>max_bekleme_sure)
+                    max_bekleme_sure=bir_musteri.bekleme_suresi;
+                giseler[i].hizmet_sure=gise_sure;
+                giseler[i].g_musteri=bir_musteri;
+                giseler[i].bos_mu=1;
+                giseler[i].top_musteri++;
+                giseler[i].top_sure+=giseler[i].hizmet_sure;
+                toplam_bekleme+=bir_musteri.bekleme_suresi;
+                printf("%d.dakikada Musteri#%d Gise#%d'de hizmet almaya baslamistir.\n",zaman,bir_musteri.no,i+1);
+            }
+        }
+        finito=1;
+        for(i=0;i<3;i++){
+            if(giseler[i].bos_mu==1){
+                finito=0;
+            }
+        }
+        if(bos_mu(on)==0)
+        {
+            finito=0;
+        }
+        zaman++;
+    }
+    printf("\nSimulasyon bitti, sonuclar:\n");
+    printf("Herhangi bir zamanda kuyrukta bulunan max kisi sayisi:%d\n",max_uzunluk);
+    printf("Kuyrukta en uzun sure bekleyen musterinin bekleme suresi:%d\n",max_bekleme_sure);
+    printf("Bir musterinin kuyrukta ortalama bekleme suresi:%.2f\n",(float)toplam_bekleme/(musteri_say-1));
+
+    printf("Gise No\tToplam Musteri Sayisi\tOrtalama Hizmet Verme Suresi\n");
+    printf("-------\t---------------------\t----------------------------\n");
+    for(i=0;i<3;i++){
+        printf("   %d\t\t%d\t\t       \t%.2f\n",i+1,giseler[i].top_musteri,(float)giseler[i].top_sure/giseler[i].top_musteri);
+    }
+
+    return 0;
+}
