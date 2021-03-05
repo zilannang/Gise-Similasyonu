@@ -1,4 +1,4 @@
-#threading ve queue birlikte kullunıldı. threding paralel işlem yapar. kuyruğun üzerine elamn ekleme gibi. zamanlayıcı için kullanılan kütüphanedir.(threadig)
+#threading ve queue birlikte kullunÃ½ldÃ½. threding paralel iÃ¾lem yapar. kuyruÃ°un Ã¼zerine elamn ekleme gibi. zamanlayÃ½cÃ½ iÃ§in kullanÃ½lan kÃ¼tÃ¼phanedir.(threadig)
 
 import threading   
 import queue
@@ -18,12 +18,12 @@ gise3_musteri = 0
 gise4_sure = 0
 gise4_musteri = 0
 
-#Asagidaki 4 fonksiyon birbirlerinin aynisi, her bir gişe için ayrı ayrı class'lar yapılmalı. 
+#Asagidaki 4 fonksiyon birbirlerinin aynisi, her bir giÃ¾e iÃ§in ayrÃ½ ayrÃ½ class'lar yapÃ½lmalÃ½. 
 
 def gise1(client,c_time,f):
-     #lock.acquire()fonksiyonu zaman aşımını engeller.İstenen 	zaman gelince müşteri alımını durdurur.Zamanlayıcıdır.
-     #lock.release() ise,acquire ile kitli olan durumu kilitli    	değil yapar.
-     #str(c_time), c_time'ı önceden tanımlamadan kullanmamızı    	sağlar. 
+     #lock.acquire()fonksiyonu zaman aÃ¾Ã½mÃ½nÃ½ engeller.Ãstenen 	zaman gelince mÃ¼Ã¾teri alÃ½mÃ½nÃ½ durdurur.ZamanlayÃ½cÃ½dÃ½r.
+     #lock.release() ise,acquire ile kitli olan durumu kilitli    	deÃ°il yapar.
+     #str(c_time), c_time'Ã½ Ã¶nceden tanÃ½mlamadan kullanmamÃ½zÃ½    	saÃ°lar. 
 	lock1.acquire()
 	f.write (str(c_time) + ".dakikada " + client + " Gise-1 de hizmet almaya baslamistir. \n")
 	rand = random.randint(3,10) 
@@ -77,7 +77,7 @@ def gise4(client,c_time,f):
 
 
 def musteri_ekle(q,sim_time,f): 
-#sim simülasyonu, q kuyruğu ifade eder.
+#sim simÃ¼lasyonu, q kuyruÃ°u ifade eder.
 	i = 1
 	start = 0
 	while True:
@@ -102,7 +102,7 @@ t = threading.Thread(target=musteri_ekle, args=(q,sim_time,f,))
 t.start()
 start = 0
 
-#lockların olduğu sınıfları kilitler.
+#locklarÃ½n olduÃ°u sÃ½nÃ½flarÃ½ kilitler.
 lock1 = threading.Lock()  
 lock2 = threading.Lock()
 lock3 = threading.Lock()
