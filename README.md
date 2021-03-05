@@ -1,2 +1,2 @@
 # GişeSimilasyonu
- Python 
+ Python3 kullanılmıştır.
